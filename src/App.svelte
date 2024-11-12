@@ -61,6 +61,7 @@
   </p>
 {:else}
   <h1>{checkedCount}/{n}</h1>
+  <p>Check all the boxes to get the unlock code!</p>
 {/if}
 
 <div class="container">
