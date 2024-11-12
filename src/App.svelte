@@ -47,7 +47,12 @@
 
 {#if win}
   <h1>You win!</h1>
-  <p>Your code: {String(values[n - 1]).slice(0, 10)}</p>
+  <p>
+    Your code: <a
+      href={`https://www.eventpop.me/e/62035?discount_code=${String(values[n - 1]).slice(0, 10)}`}
+      >{String(values[n - 1]).slice(0, 10)}</a
+    >
+  </p>
 {:else}
   <h1>{checkedCount}/{n}</h1>
 {/if}
@@ -58,7 +63,15 @@
   {/each}
 </div>
 
+<footer>
+  A <a href="https://www.eventpop.me/e/62035">browser automation challenge</a
+  ><br />made by <a href="https://github.com/narze">@narze</a>
+</footer>
+
 <style>
+  footer {
+    margin-top: 2em;
+  }
   .container {
     display: grid;
     grid-template-columns: repeat(10, 0fr);
