@@ -49,8 +49,14 @@
   <h1>You win!</h1>
   <p>
     Your code: <a
-      href={`https://www.eventpop.me/e/62035?discount_code=${String(values[n - 1]).slice(0, 10)}`}
-      >{String(values[n - 1]).slice(0, 10)}</a
+      href={`https://www.eventpop.me/e/62035?discount_code=${String(
+        values[n - 1]
+      )
+        .slice(0, 10)
+        .toUpperCase()}`}
+      >{String(values[n - 1])
+        .slice(0, 10)
+        .toUpperCase()}</a
     >
   </p>
 {:else}
