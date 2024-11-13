@@ -118,23 +118,6 @@
 </main>
 
 <style>
-  nav {
-    padding: 1rem;
-    background: #f4f4f4;
-    margin-bottom: 2rem;
-  }
-
-  nav :global(a) {
-    margin-right: 1rem;
-    color: #ff3e00;
-    text-decoration: none;
-    font-weight: 500;
-  }
-
-  nav :global(a:hover) {
-    text-decoration: underline;
-  }
-
   main {
     display: flex;
     flex-direction: column;
