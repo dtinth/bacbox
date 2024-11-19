@@ -1,62 +1,71 @@
 <script lang="ts">
-  import { Router, Link, Route } from "svelte-routing"
-  import SevenSegment from "../lib/SevenSegment.svelte"
+  import SevenSegment from "../lib/SevenSegment.svelte";
 
-  const NUM_DIGITS = 6
+  const NUM_DIGITS = 6;
 
-  let targetNumber: number[] = $state([])
-  let playerSegments: number[][] = $state([])
-  let gameWon = $state(false)
+  let targetNumber: number[] = $state([]);
+  let playerSegments: number[][] = $state([]);
+  let gameWon = $state(false);
+
+  let startTime: number;
+  let elapsedTime: number = $state(0);
+  let timerInterval: ReturnType<typeof setInterval>;
 
   function generateRandomNumber(): number[] {
     return Array(NUM_DIGITS)
       .fill(0)
-      .map(() => Math.floor(Math.random() * 10))
+      .map(() => Math.floor(Math.random() * 10));
   }
 
   function createEmptySegments(): number[][] {
     return Array(NUM_DIGITS)
       .fill(null)
-      .map(() => Array(7).fill(0))
+      .map(() => Array(7).fill(0));
   }
 
   function startNewGame() {
-    targetNumber = generateRandomNumber()
-    playerSegments = createEmptySegments()
-    gameWon = false
+    targetNumber = generateRandomNumber();
+    playerSegments = createEmptySegments();
+    gameWon = false;
+    startTime = Date.now();
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      elapsedTime = (Date.now() - startTime) / 1000;
+    }, 16);
   }
 
   function handleSegmentClick(segmentIndex: number, digitIndex: number) {
-    if (gameWon) return
+    if (gameWon) return;
 
-    const newSegments = playerSegments.map((digit) => [...digit])
-    newSegments[digitIndex] = [...newSegments[digitIndex]]
+    const newSegments = playerSegments.map((digit) => [...digit]);
+    newSegments[digitIndex] = [...newSegments[digitIndex]];
     newSegments[digitIndex][segmentIndex] = Number(
       !newSegments[digitIndex][segmentIndex]
-    )
-    playerSegments = newSegments
+    );
+    playerSegments = newSegments;
 
-    checkWin()
+    checkWin();
   }
 
   function getDigitFromSegments(segments: number[]): string {
-    const segmentStr = segments.join("")
+    const segmentStr = segments.join("");
     for (let i = 0; i < patterns.length; i++) {
       if (patterns[i].join("") === segmentStr) {
-        return i.toString()
+        return i.toString();
       }
     }
-    return "x"
+    return "x";
   }
 
   function checkWin() {
     const currentNumbers = playerSegments.map((segments) =>
       getDigitFromSegments(segments)
-    )
+    );
     if (
       currentNumbers.every((val, idx) => val === targetNumber[idx].toString())
     ) {
-      gameWon = true
+      gameWon = true;
+      clearInterval(timerInterval);
     }
   }
 
@@ -71,14 +80,14 @@
     [1, 0, 1, 0, 0, 1, 0], // 7
     [1, 1, 1, 1, 1, 1, 1], // 8
     [1, 1, 1, 1, 0, 1, 1], // 9
-  ]
+  ];
 
-  startNewGame()
+  startNewGame();
 
-  let targetNumberString = $derived(targetNumber.join(""))
+  let targetNumberString = $derived(targetNumber.join(""));
   let currentNumberString = $derived(
     playerSegments.map((segments) => getDigitFromSegments(segments)).join("")
-  )
+  );
 </script>
 
 <main>
@@ -108,6 +117,7 @@
   <div class="game-info">
     {#if gameWon}
       <p class="success">Congratulations! You won!</p>
+      <p class="elapsed-time">Elapsed Time: {elapsedTime.toFixed(2)} seconds</p>
       <button onclick={startNewGame}>Play Again</button>
     {:else}
       <p class="instructions">
@@ -176,6 +186,12 @@
 
   .instructions {
     color: #888;
+  }
+
+  .elapsed-time {
+    color: #4caf50;
+    font-weight: bold;
+    font-size: 1.2rem;
   }
 
   button {
